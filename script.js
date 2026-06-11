@@ -119,7 +119,7 @@ function answer(index) {
   explanation.textContent = currentQuestion.explanation || "";
   document.getElementById("score").textContent = "Score : " + score;
 
-  setTimeout(generateQuestion, 1500);
+  setTimeout(generateQuestion, 10000);
 }
 
 /* -----------------------
