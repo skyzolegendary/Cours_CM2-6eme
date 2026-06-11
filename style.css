@@ -43,3 +43,8 @@ button {
   margin: 20px;
   border-radius: 10px;
 }
+
+#explanation {
+  margin-top: 10px;
+  font-style: italic;
+}

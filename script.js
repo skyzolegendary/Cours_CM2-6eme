@@ -1,45 +1,112 @@
 let score = 0;
+let currentLevel = "cm2";
+let currentQuestion = {};
+let shuffledChoices = [];
 
-function generateQuestion() {
-  let a = Math.floor(Math.random() * 4) + 1;
-  let b = 4;
+const levels = {
+  cm2: [
+    {
+      q: "1/2 + 1/2",
+      a: "1",
+      choices: ["1", "2/4", "2"]
+    },
+    {
+      q: "1/4 + 2/4",
+      a: "3/4",
+      choices: ["3/4", "1/2", "2/4"]
+    },
+    {
+      q: "3/5 + 1/5",
+      a: "4/5",
+      choices: ["4/5", "3/6", "1"]
+    }
+  ],
 
-  let question = `${a}/4 + 1/4`;
-  let correct = (a + 1) + "/4";
+  sixieme: [
+    {
+      q: "1/2 + 1/4",
+      a: "3/4",
+      choices: ["2/6", "3/4", "1/6"],
+      explanation: "1/2 = 2/4 donc 2/4 + 1/4 = 3/4"
+    },
+    {
+      q: "3/4 + 1/8",
+      a: "7/8",
+      choices: ["7/8", "4/12", "1"],
+      explanation: "3/4 = 6/8 donc 6/8 + 1/8 = 7/8"
+    },
+    {
+      q: "5/6 - 1/6",
+      a: "4/6",
+      choices: ["4/6", "6/6", "1/6"],
+      explanation: "Même dénominateur → on soustrait le haut"
+    }
+  ],
 
-  let choices = [
-    correct,
-    a + "/4",
-    (a + 2) + "/4"
-  ];
+  plus: [
+    {
+      q: "0.5 + 0.25",
+      a: "0.75",
+      choices: ["0.75", "0.70", "1"],
+      explanation: "0.5 = 0.50 donc 0.50 + 0.25 = 0.75"
+    },
+    {
+      q: "1.2 + 0.8",
+      a: "2",
+      choices: ["2", "1.10", "3"],
+      explanation: "1.2 + 0.8 = 2"
+    },
+    {
+      q: "3/4 + 0.5",
+      a: "1.25",
+      choices: ["1.25", "1", "0.75"],
+      explanation: "3/4 = 0.75 donc 0.75 + 0.5 = 1.25"
+    }
+  ]
+};
 
-  choices.sort(() => Math.random() - 0.5);
-
-  document.getElementById("question").textContent = question;
-
-  let buttons = document.querySelectorAll("button");
-  buttons.forEach((btn, i) => {
-    btn.textContent = choices[i];
-  });
-
-  return correct;
+function setLevel(level) {
+  currentLevel = level;
+  generateQuestion();
 }
 
-let correctAnswer = generateQuestion();
+function generateQuestion() {
+  let list = levels[currentLevel];
+
+  currentQuestion = list[Math.floor(Math.random() * list.length)];
+
+  shuffledChoices = [...currentQuestion.choices].sort(() => Math.random() - 0.5);
+
+  document.getElementById("question").textContent = currentQuestion.q + " = ?";
+
+  let buttons = document.querySelectorAll(".answerBtn");
+
+  buttons.forEach((btn, i) => {
+    btn.textContent = shuffledChoices[i];
+  });
+
+  document.getElementById("result").textContent = "";
+  document.getElementById("explanation").textContent = "";
+}
 
 function answer(index) {
-  let buttons = document.querySelectorAll("button");
-  let chosen = buttons[index].textContent;
+  let chosen = shuffledChoices[index];
   let result = document.getElementById("result");
+  let explanation = document.getElementById("explanation");
 
-  if (chosen === correctAnswer) {
+  if (chosen === currentQuestion.a) {
     result.textContent = "✅ Bravo !";
+    result.style.color = "green";
     score++;
   } else {
     result.textContent = "❌ Faux !";
+    result.style.color = "red";
   }
 
+  explanation.textContent = currentQuestion.explanation || "";
   document.getElementById("score").textContent = "Score : " + score;
 
-  correctAnswer = generateQuestion();
+  setTimeout(generateQuestion, 1500);
 }
+
+generateQuestion();
