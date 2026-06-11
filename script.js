@@ -1,8 +1,8 @@
 let score = 0;
 let currentLevel = "cm2";
+
 let currentQuestion = {};
 let shuffledChoices = [];
-let selectedSlices = [];
 
 /* -----------------------
    NIVEAUX
@@ -15,24 +15,11 @@ const levels = {
     { q: "100 - 40", a: "60", choices: ["50", "60", "70"], explanation: "Soustraction" },
     { q: "1/2 + 1/2", a: "1", choices: ["1", "2", "1/2"], explanation: "Fractions simples" },
     { q: "20 + 30 + 10", a: "60", choices: ["50", "60", "70"], explanation: "Addition multiple" },
-    { q: "3/4 + 1/4", a: "1", choices: ["1", "2/4", "3/4"], explanation: "Fractions complètes" },
+    { q: "3/4 + 1/4", a: "1", choices: ["1", "3/4", "2/4"], explanation: "Fractions complètes" },
     { q: "80 - 30", a: "50", choices: ["40", "50", "60"], explanation: "Soustraction" },
     { q: "25 + 25", a: "50", choices: ["40", "50", "60"], explanation: "Double" },
-    { q: "60 + 20", a: "80", choices: ["70", "80", "90"], explanation: "Addition dizaines" },
-    { q: "100 - 20", a: "80", choices: ["80", "90", "70"], explanation: "Complément à 100" }
-  ],
-
-  sixieme: [
-    { q: "3/4 + 1/8", a: "7/8", choices: ["7/8", "6/8", "1"], explanation: "Mise au même dénominateur" },
-    { q: "5/6 - 1/3", a: "3/6", choices: ["2/6", "3/6", "4/6"], explanation: "Réduction" },
-    { q: "7/10 + 2/10", a: "9/10", choices: ["9/10", "8/10", "1"], explanation: "Addition simple" },
-    { q: "2/3 + 1/6", a: "5/6", choices: ["5/6", "4/6", "6/6"], explanation: "Mise au même dénominateur" }
-  ],
-
-  plus: [
-    { q: "0.75 + 0.25", a: "1", choices: ["1", "0.9", "1.2"], explanation: "Décimaux" },
-    { q: "1.25 + 0.75", a: "2", choices: ["2", "1.9", "3"], explanation: "Décimaux" },
-    { q: "50 + 25 + 25", a: "100", choices: ["90", "100", "110"], explanation: "Complément à 100" }
+    { q: "60 + 20", a: "80", choices: ["70", "80", "90"], explanation: "Dizaines" },
+    { q: "100 - 20", a: "80", choices: ["70", "80", "90"], explanation: "Complément à 100" }
   ]
 };
 
@@ -46,54 +33,48 @@ function setLevel(level) {
 }
 
 function generateQuestion() {
-  let list = levels[currentLevel];
+  const list = levels[currentLevel];
+
+  if (!list || list.length === 0) return;
 
   currentQuestion = list[Math.floor(Math.random() * list.length)];
 
-  shuffledChoices = [...currentQuestion.choices]
-    .sort(() => Math.random() - 0.5);
+  shuffledChoices = [...currentQuestion.choices].sort(() => Math.random() - 0.5);
 
   const q = document.getElementById("question");
-  if (q) q.textContent = currentQuestion.q + " = ?";
+  if (!q) return;
 
-  document.querySelectorAll(".answerBtn").forEach((btn, i) => {
-    btn.textContent = shuffledChoices[i];
+  q.textContent = currentQuestion.q + " = ?";
+
+  const buttons = document.querySelectorAll(".answerBtn");
+
+  buttons.forEach((btn, i) => {
+    btn.textContent = shuffledChoices[i] ?? "";
   });
 
-  const r = document.getElementById("result");
-  const e = document.getElementById("explanation");
-
-  if (r) r.textContent = "";
-  if (e) e.textContent = "";
+  document.getElementById("result").textContent = "";
+  document.getElementById("explanation").textContent = "";
 }
 
 function answer(index) {
-  let chosen = shuffledChoices[index];
+  const chosen = shuffledChoices[index];
 
   const result = document.getElementById("result");
   const explanation = document.getElementById("explanation");
 
   if (chosen === currentQuestion.a) {
-    if (result) {
-      result.textContent = "✅ Bravo !";
-      result.style.color = "green";
-    }
+    result.textContent = "✅ Bravo !";
+    result.style.color = "green";
     score++;
   } else {
-    if (result) {
-      result.textContent = "❌ Faux !";
-      result.style.color = "red";
-    }
+    result.textContent = "❌ Faux !";
+    result.style.color = "red";
   }
 
-  if (explanation) {
-    explanation.textContent = currentQuestion.explanation || "";
-  }
+  explanation.textContent = currentQuestion.explanation || "";
+  document.getElementById("score").textContent = "Score : " + score;
 
-  const s = document.getElementById("score");
-  if (s) s.textContent = "Score : " + score;
-
-  setTimeout(generateQuestion, 1200);
+  setTimeout(generateQuestion, 1500);
 }
 
 /* -----------------------
@@ -108,6 +89,7 @@ const pieLevels = [
 ];
 
 let currentPie = null;
+let selectedSlices = [];
 
 function newPie() {
   currentPie = pieLevels[Math.floor(Math.random() * pieLevels.length)];
@@ -126,6 +108,7 @@ function newPie() {
 
 function toggleSlice(index) {
   const slices = document.querySelectorAll(".slice");
+
   if (!slices[index]) return;
 
   slices[index].classList.toggle("active");
@@ -139,24 +122,21 @@ function toggleSlice(index) {
 
 function checkPie() {
   const result = document.getElementById("pieResult");
-  if (!currentPie) return;
 
   const correct = new Set(currentPie.target);
   const user = new Set(selectedSlices);
 
-  const ok =
+  const isCorrect =
     correct.size === user.size &&
     [...correct].every(v => user.has(v));
 
-  if (result) {
-    if (ok) {
-      result.textContent = "✅ Bravo ! " + currentPie.label;
-      result.style.color = "green";
-      setTimeout(newPie, 1200);
-    } else {
-      result.textContent = "❌ Essaie encore";
-      result.style.color = "red";
-    }
+  if (isCorrect) {
+    result.textContent = "✅ Bravo ! " + currentPie.label;
+    result.style.color = "green";
+    setTimeout(newPie, 1500);
+  } else {
+    result.textContent = "❌ Essaie encore";
+    result.style.color = "red";
   }
 }
 
