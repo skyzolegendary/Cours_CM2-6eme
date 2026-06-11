@@ -30,3 +30,16 @@ button {
   font-weight: bold;
   margin-top: 15px;
 }
+.lesson {
+  background: #fff3cd;
+  padding: 15px;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+.quiz {
+  background: #e3f2fd;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+}
