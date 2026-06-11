@@ -286,7 +286,6 @@ let currentPie = null;
 let selectedSlices = [];
 
 function createPie(total) {
-  slice.style.background = i % 2 === 0 ? "#f2f2f2" : "#d9d9d9";
   const pie = document.getElementById("pie");
   pie.innerHTML = "";
 
