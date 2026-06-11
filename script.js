@@ -10,37 +10,43 @@ let selectedSlices = [];
 
 const levels = {
   cm2: [
-    {
-      q: "1/2 + 1/2",
-      a: "1",
-      choices: ["1", "2/4", "2"],
-      explanation: "1/2 + 1/2 = 1"
-    },
-    {
-      q: "1/4 + 2/4",
-      a: "3/4",
-      choices: ["3/4", "1/2", "2/4"],
-      explanation: "Même dénominateur"
-    }
+    { q: "10 + 15", a: "25", choices: ["20", "25", "30"], explanation: "Addition simple" },
+    { q: "50 + 25", a: "75", choices: ["75", "80", "70"], explanation: "Addition jusqu'à 100" },
+    { q: "100 - 40", a: "60", choices: ["50", "60", "70"], explanation: "Soustraction" },
+    { q: "1/2 + 1/2", a: "1", choices: ["1", "2", "1/2"], explanation: "Fraction simple" },
+    { q: "20 + 30 + 10", a: "60", choices: ["50", "60", "70"], explanation: "Addition multiple" },
+    { q: "3/4 + 1/4", a: "1", choices: ["1", "2/4", "3/4"], explanation: "Fractions complètes" },
+    { q: "80 - 30", a: "50", choices: ["40", "50", "60"], explanation: "Soustraction facile" },
+    { q: "25 + 25", a: "50", choices: ["40", "50", "60"], explanation: "Double" },
+    { q: "60 + 20", a: "80", choices: ["70", "80", "90"], explanation: "Addition dizaines" },
+    { q: "100 - 20", a: "80", choices: ["80", "90", "70"], explanation: "Complément à 100" }
   ],
 
-  sixieme: [
-    {
-      q: "1/2 + 1/4",
-      a: "3/4",
-      choices: ["3/4", "1/6", "2/6"],
-      explanation: "2/4 + 1/4 = 3/4"
-    }
-  ],
+    sixieme: [
+      { q: "3/4 + 1/8", a: "7/8", choices: ["7/8", "6/8", "1"], explanation: "mise au même dénominateur" },
+      { q: "5/6 - 1/3", a: "3/6", choices: ["2/6", "3/6", "4/6"], explanation: "réduction" },
+      { q: "7/10 + 2/10", a: "9/10", choices: ["9/10", "8/10", "1"], explanation: "addition simple" },
+      { q: "12/20 simplifié", a: "3/5", choices: ["2/5", "3/5", "4/5"], explanation: "simplification" },
+      { q: "15/25 simplifié", a: "3/5", choices: ["3/5", "5/5", "2/5"], explanation: "réduction" },
+      { q: "2/3 + 1/6", a: "5/6", choices: ["5/6", "4/6", "6/6"], explanation: "mise au même dénominateur" },
+      { q: "8/12 simplifié", a: "2/3", choices: ["2/3", "3/4", "1/2"], explanation: "division par 4" },
+      { q: "9/12 simplifié", a: "3/4", choices: ["3/4", "2/3", "4/5"], explanation: "réduction" },
+      { q: "1/2 + 1/3", a: "5/6", choices: ["5/6", "4/6", "6/6"], explanation: "mise au même dénominateur" },
+      { q: "7/8 - 1/8", a: "6/8", choices: ["6/8", "5/8", "1"], explanation: "soustraction simple" }
+    ],
 
-  plus: [
-    {
-      q: "0.5 + 0.25",
-      a: "0.75",
-      choices: ["0.75", "1", "0.70"],
-      explanation: "0.5 + 0.25 = 0.75"
-    }
-  ]
+plus: [
+  { q: "0.75 + 0.25", a: "1", choices: ["1", "0.9", "1.2"], explanation: "décimaux simples" },
+  { q: "1.25 + 0.75", a: "2", choices: ["2", "1.9", "3"], explanation: "addition décimale" },
+  { q: "50 + 25 + 25", a: "100", choices: ["90", "100", "110"], explanation: "jusqu'à 100" },
+  { q: "0.5 + 1.5", a: "2", choices: ["2", "1.5", "3"], explanation: "décimaux" },
+  { q: "75 + 25", a: "100", choices: ["90", "100", "110"], explanation: "complément 100" },
+  { q: "0.2 + 0.3", a: "0.5", choices: ["0.5", "0.6", "0.4"], explanation: "décimaux simples" },
+  { q: "3/4 + 0.25", a: "1", choices: ["1", "0.75", "1.25"], explanation: "fractions + décimaux" },
+  { q: "100 - 55", a: "45", choices: ["40", "45", "50"], explanation: "soustraction" },
+  { q: "60 + 40", a: "100", choices: ["90", "100", "110"], explanation: "complément" },
+  { q: "1.1 + 0.9", a: "2", choices: ["2", "1.9", "3"], explanation: "décimaux" }
+]
 };
 
 /* -----------------------
@@ -86,15 +92,24 @@ function answer(index) {
     result.style.color = "red";
   }
 
-  explanation.textContent = currentQuestion.explanation;
+  explanation.textContent = currentQuestion.explanation || "";
   document.getElementById("score").textContent = "Score : " + score;
 
-  setTimeout(generateQuestion, 10000);
+  setTimeout(generateQuestion, 1500);
 }
 
 /* -----------------------
-   CAMEMBERT
+   CAMEMBERT (VERSION FIXÉE)
 ------------------------ */
+
+const pieLevels = [
+  { target: [0, 1, 2], label: "3/4" },
+  { target: [0, 1], label: "2/4" },
+  { target: [0], label: "1/4" },
+  { target: [1, 2, 3], label: "3/4 autre" }
+];
+
+let currentPie = pieLevels[Math.floor(Math.random() * pieLevels.length)];
 
 function toggleSlice(index) {
   const slices = document.querySelectorAll(".slice");
@@ -111,7 +126,7 @@ function toggleSlice(index) {
 function checkPie() {
   const result = document.getElementById("pieResult");
 
-  const correct = [0, 1, 2];
+  let correct = currentPie.target;
 
   selectedSlices.sort();
 
@@ -119,7 +134,7 @@ function checkPie() {
     selectedSlices.length === correct.length &&
     selectedSlices.every(v => correct.includes(v))
   ) {
-    result.textContent = "✅ Bravo ! 3/4";
+    result.textContent = "✅ Bravo ! " + currentPie.label;
     result.style.color = "green";
   } else {
     result.textContent = "❌ Essaie encore";
