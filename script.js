@@ -223,7 +223,7 @@ function answer(index) {
   explanation.textContent = currentQuestion.explanation || "";
   document.getElementById("score").textContent = "Score : " + score;
 
-  setTimeout(generateQuestion, 5000);
+  setTimeout(generateQuestion, 3000);
 }
 
 /* -----------------------
@@ -231,28 +231,101 @@ function answer(index) {
 ------------------------ */
 
 const pieLevels = [
-  { target: [0, 1, 2], label: "3/4" },
-  { target: [0, 1], label: "2/4" },
-  { target: [0], label: "1/4" },
-  { target: [1, 2, 3], label: "3/4 autre" }
+  // quart (4 parts)
+  { label: "1/4" },
+  { label: "2/4" },
+  { label: "3/4" },
+  { label: "4/4" },
+
+  // équivalents simples
+  { label: "1/2" },
+  { label: "3/2" }, // plus dur
+  { label: "2/2" },
+
+  // tiers (nécessite 3 ou 6 parts)
+  { label: "1/3" },
+  { label: "2/3" },
+  { label: "3/3" },
+
+  // cinquièmes
+  { label: "1/5" },
+  { label: "2/5" },
+  { label: "3/5" },
+  { label: "4/5" },
+  { label: "5/5" },
+
+  // sixièmes (très utile pédagogiquement)
+  { label: "1/6" },
+  { label: "2/6" },
+  { label: "3/6" },
+  { label: "4/6" },
+  { label: "5/6" },
+  { label: "6/6" },
+
+  // huitièmes
+  { label: "1/8" },
+  { label: "2/8" },
+  { label: "3/8" },
+  { label: "4/8" },
+  { label: "5/8" },
+  { label: "6/8" },
+  { label: "7/8" },
+  { label: "8/8" },
+
+  // dixièmes (niveau +)
+  { label: "1/10" },
+  { label: "2/10" },
+  { label: "3/10" },
+  { label: "4/10" },
+  { label: "5/10" },
+  { label: "6/10" },
+  { label: "7/10" },
+  { label: "8/10" },
+  { label: "9/10" },
+  { label: "10/10" }
 ];
 
 let currentPie = null;
 let selectedSlices = [];
 
+function createPie(total) {
+  const pie = document.getElementById("pie");
+  pie.innerHTML = "";
+
+  for (let i = 0; i < total; i++) {
+    const slice = document.createElement("div");
+    slice.classList.add("slice");
+
+    slice.onclick = () => toggleSlice(i);
+
+    // rotation pour faire un vrai camembert
+    const angle = 360 / total;
+    slice.style.transform = `rotate(${i * angle}deg) skewY(${90 - angle}deg)`;
+
+    pie.appendChild(slice);
+  }
+}
+
 function newPie() {
-  currentPie = pieLevels[Math.floor(Math.random() * pieLevels.length)];
+  const possibleSizes = [4, 6, 8, 10, 12];
+
+  const total = possibleSizes[Math.floor(Math.random() * possibleSizes.length)];
+
+  createPie(total);
   selectedSlices = [];
 
-  const label = document.getElementById("pieLabel");
-  const result = document.getElementById("pieResult");
+  let valid;
+  let num, den;
 
-  if (label) label.textContent = "Fais : " + currentPie.label;
-  if (result) result.textContent = "";
+  do {
+    valid = pieLevels[Math.floor(Math.random() * pieLevels.length)];
+    [num, den] = valid.label.split("/").map(Number);
+  } while ((num / den) * total % 1 !== 0);
 
-  document.querySelectorAll(".slice").forEach(s => {
-    s.classList.remove("active");
-  });
+  currentPie = valid;
+
+  document.getElementById("pieLabel").textContent = "Fais : " + currentPie.label;
+  document.getElementById("pieResult").textContent = "";
 }
 
 function toggleSlice(index) {
@@ -272,17 +345,16 @@ function toggleSlice(index) {
 function checkPie() {
   const result = document.getElementById("pieResult");
 
-  const correct = new Set(currentPie.target);
-  const user = new Set(selectedSlices);
+  const totalSlices = document.querySelectorAll(".slice").length;
+  const selectedCount = selectedSlices.length;
 
-  const isCorrect =
-    correct.size === user.size &&
-    [...correct].every(v => user.has(v));
+  const [num, den] = currentPie.label.split("/").map(Number);
+  const expected = (num / den) * totalSlices;
 
-  if (isCorrect) {
+  if (selectedCount === expected) {
     result.textContent = "✅ Bravo ! " + currentPie.label;
     result.style.color = "green";
-    setTimeout(newPie, 5000);
+    setTimeout(newPie, 2000);
   } else {
     result.textContent = "❌ Essaie encore";
     result.style.color = "red";

@@ -43,30 +43,22 @@ button {
 
 /* 🍰 CAMEMBERT */
 #pie {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-
+  position: relative;
   width: 200px;
   height: 200px;
-
-  margin: 30px auto;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #333;
 }
 
 .slice {
-  border: 1px solid #333;
-  background: white;
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background: lightgray;
+  transform-origin: 100% 100%;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-.slice:hover {
-  background: #ffeaa7;
 }
 
 .slice.active {
-  background: gold;
+  background: orange;
 }
