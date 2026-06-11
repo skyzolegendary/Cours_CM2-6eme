@@ -109,8 +109,17 @@ const pieLevels = [
   { target: [1, 2, 3], label: "3/4 autre" }
 ];
 
-let currentPie = pieLevels[Math.floor(Math.random() * pieLevels.length)];
+let currentPie = null;
+let selectedSlices = [];
 
+/* 🎯 nouvelle cible */
+function newPie() {
+  currentPie = pieLevels[Math.floor(Math.random() * pieLevels.length)];
+  selectedSlices = []; // IMPORTANT reset
+  document.getElementById("pieResult").textContent = "";
+}
+
+/* 🍰 clic sur une part */
 function toggleSlice(index) {
   const slices = document.querySelectorAll(".slice");
 
@@ -123,29 +132,30 @@ function toggleSlice(index) {
   }
 }
 
+/* ✔ validation */
 function checkPie() {
   const result = document.getElementById("pieResult");
 
-  let correct = currentPie.target;
+  let correct = [...currentPie.target].sort();
+  let user = [...selectedSlices].sort();
 
-  selectedSlices.sort();
+  let isCorrect =
+    user.length === correct.length &&
+    user.every((v, i) => v === correct[i]);
 
-  if (
-    selectedSlices.length === correct.length &&
-    selectedSlices.every(v => correct.includes(v))
-  ) {
+  if (isCorrect) {
     result.textContent = "✅ Bravo ! " + currentPie.label;
     result.style.color = "green";
+
+    setTimeout(newPie, 1500); // nouvelle question
   } else {
     result.textContent = "❌ Essaie encore";
     result.style.color = "red";
   }
 }
 
-/* -----------------------
-   INIT
------------------------- */
-
+/* 🚀 INIT */
 document.addEventListener("DOMContentLoaded", () => {
   generateQuestion();
+  newPie(); // IMPORTANT
 });
