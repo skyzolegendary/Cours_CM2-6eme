@@ -1,48 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fractions</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>📗 Les fractions</h1>
+
+<h2>🎯 Choisis ton niveau</h2>
+
+<button onclick="setLevel('cm2')">🟢 CM2</button>
+<button onclick="setLevel('sixieme')">🟡 6e</button>
+<button onclick="setLevel('plus')">🔵 ++</button>
+
+<hr>
+
 <div class="lesson">
-    <h2>📘 Leçon : Les fractions</h2>
+    <h2>📘 Leçon</h2>
 
     <p><b>Une fraction représente une partie d’un tout.</b></p>
 
-    <p><b>Exemple :</b> 3/4</p>
-
     <ul>
-        <li>🔢 <b>Numérateur (3)</b> : nombre de parts prises</li>
-        <li>🍰 <b>Dénominateur (4)</b> : nombre total de parts</li>
+        <li>🔢 Numérateur : parts prises</li>
+        <li>🍰 Dénominateur : total des parts</li>
     </ul>
 
-    <p>👉 3/4 = on prend 3 parts sur 4</p>
+    <p>👉 Exemple : 3/4 = 3 parts sur 4</p>
 
-    <hr>
-
-    <p><b>⚠️ Règle importante :</b></p>
-
-    <p>Pour additionner des fractions, il faut que les parts soient de la même taille.</p>
-
-    <p>Exemple :</p>
-    <p>1/2 = 2/4</p>
-    <p>Donc : 1/2 + 1/4 = 3/4</p>
-
-    <hr>
-
-    <p><b>❌ Erreur fréquente :</b></p>
-    <p>Ajouter les dénominateurs (FAUX) → 1/2 + 1/4 = 2/6 ❌</p>
-
-    <p><b>✔️ Bonne méthode :</b> transformer avant d’additionner</p>
-
-    <p>
-        En mathématiques, une fraction est un moyen d'écrire un nombre rationnel sous la forme d'un quotient de deux entiers.
-    </p>
-    <p>
-        Ainsi la fraction a / b désigne le quotient de a par b (b ≠ 0).
-    </p>
-    <p>
-        Dans cette fraction, a est appelé le <b>numérateur</b> et b le <b>dénominateur</b>.
-    </p>
-    <p>
-        Une fraction représente un partage d’une entité unique : le dénominateur représente le nombre de parts égales, tandis que le numérateur représente les parts prises.
-    </p>
-    <p>
-        👉 Le dénominateur = le “tout”
-        👉 Le numérateur = la partie du tout
-    </p>
+    <p>⚠️ On ne peut pas additionner des dénominateurs directement !</p>
 </div>
+
+<hr>
+
+<div class="quiz">
+    <h2>🎯 Exercice</h2>
+
+    <p id="question"></p>
+
+    <button class="answerBtn" onclick="answer(0)"></button>
+    <button class="answerBtn" onclick="answer(1)"></button>
+    <button class="answerBtn" onclick="answer(2)"></button>
+
+    <p id="result"></p>
+    <p id="explanation"></p>
+    <p id="score"></p>
+</div>
+
+<hr>
+
+<h2>🍰 Mode Camembert</h2>
+
+<p>Fais 3/4 :</p>
+
+<div id="pie">
+    <div class="slice" onclick="toggleSlice(0)"></div>
+    <div class="slice" onclick="toggleSlice(1)"></div>
+    <div class="slice" onclick="toggleSlice(2)"></div>
+    <div class="slice" onclick="toggleSlice(3)"></div>
+</div>
+
+<button onclick="checkPie()">Valider</button>
+
+<p id="pieResult"></p>
+
+<script src="script.js"></script>
+</body>
+</html>

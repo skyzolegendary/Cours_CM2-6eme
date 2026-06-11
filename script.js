@@ -2,23 +2,31 @@ let score = 0;
 let currentLevel = "cm2";
 let currentQuestion = {};
 let shuffledChoices = [];
+let selectedSlices = [];
+
+/* -----------------------
+   NIVEAUX
+------------------------ */
 
 const levels = {
   cm2: [
     {
       q: "1/2 + 1/2",
       a: "1",
-      choices: ["1", "2/4", "2"]
+      choices: ["1", "2/4", "2"],
+      explanation: "1/2 + 1/2 = 2/2 = 1"
     },
     {
       q: "1/4 + 2/4",
       a: "3/4",
-      choices: ["3/4", "1/2", "2/4"]
+      choices: ["3/4", "1/2", "2/4"],
+      explanation: "Même dénominateur → on additionne les numérateurs"
     },
     {
       q: "3/5 + 1/5",
       a: "4/5",
-      choices: ["4/5", "3/6", "1"]
+      choices: ["4/5", "3/6", "1"],
+      explanation: "3/5 + 1/5 = 4/5"
     }
   ],
 
@@ -39,7 +47,7 @@ const levels = {
       q: "5/6 - 1/6",
       a: "4/6",
       choices: ["4/6", "6/6", "1/6"],
-      explanation: "Même dénominateur → on soustrait le haut"
+      explanation: "Même dénominateur → on soustrait"
     }
   ],
 
@@ -48,7 +56,7 @@ const levels = {
       q: "0.5 + 0.25",
       a: "0.75",
       choices: ["0.75", "0.70", "1"],
-      explanation: "0.5 = 0.50 donc 0.50 + 0.25 = 0.75"
+      explanation: "0.5 + 0.25 = 0.75"
     },
     {
       q: "1.2 + 0.8",
@@ -60,10 +68,14 @@ const levels = {
       q: "3/4 + 0.5",
       a: "1.25",
       choices: ["1.25", "1", "0.75"],
-      explanation: "3/4 = 0.75 donc 0.75 + 0.5 = 1.25"
+      explanation: "0.75 + 0.5 = 1.25"
     }
   ]
 };
+
+/* -----------------------
+   QUIZ
+------------------------ */
 
 function setLevel(level) {
   currentLevel = level;
@@ -91,6 +103,7 @@ function generateQuestion() {
 
 function answer(index) {
   let chosen = shuffledChoices[index];
+
   let result = document.getElementById("result");
   let explanation = document.getElementById("explanation");
 
@@ -109,4 +122,45 @@ function answer(index) {
   setTimeout(generateQuestion, 1500);
 }
 
-generateQuestion();
+/* -----------------------
+   CAMEMBERT
+------------------------ */
+
+function toggleSlice(index) {
+  const slices = document.querySelectorAll(".slice");
+
+  slices[index].classList.toggle("active");
+
+  if (selectedSlices.includes(index)) {
+    selectedSlices = selectedSlices.filter(i => i !== index);
+  } else {
+    selectedSlices.push(index);
+  }
+}
+
+function checkPie() {
+  const result = document.getElementById("pieResult");
+
+  selectedSlices.sort();
+
+  const correct = [0, 1, 2]; // 3/4
+
+  if (
+    selectedSlices.length === correct.length &&
+    selectedSlices.every(v => correct.includes(v))
+  ) {
+    result.textContent = "✅ Bravo ! 3/4";
+    result.style.color = "green";
+  } else {
+    result.textContent = "❌ Essaie encore";
+    result.style.color = "red";
+  }
+}
+
+/* -----------------------
+   INIT SAFE
+------------------------ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  generateQuestion();
+});
