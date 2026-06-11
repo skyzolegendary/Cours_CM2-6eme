@@ -14,19 +14,13 @@ const levels = {
       q: "1/2 + 1/2",
       a: "1",
       choices: ["1", "2/4", "2"],
-      explanation: "1/2 + 1/2 = 2/2 = 1"
+      explanation: "1/2 + 1/2 = 1"
     },
     {
       q: "1/4 + 2/4",
       a: "3/4",
       choices: ["3/4", "1/2", "2/4"],
-      explanation: "Même dénominateur → on additionne les numérateurs"
-    },
-    {
-      q: "3/5 + 1/5",
-      a: "4/5",
-      choices: ["4/5", "3/6", "1"],
-      explanation: "3/5 + 1/5 = 4/5"
+      explanation: "Même dénominateur"
     }
   ],
 
@@ -34,20 +28,8 @@ const levels = {
     {
       q: "1/2 + 1/4",
       a: "3/4",
-      choices: ["2/6", "3/4", "1/6"],
-      explanation: "1/2 = 2/4 donc 2/4 + 1/4 = 3/4"
-    },
-    {
-      q: "3/4 + 1/8",
-      a: "7/8",
-      choices: ["7/8", "4/12", "1"],
-      explanation: "3/4 = 6/8 donc 6/8 + 1/8 = 7/8"
-    },
-    {
-      q: "5/6 - 1/6",
-      a: "4/6",
-      choices: ["4/6", "6/6", "1/6"],
-      explanation: "Même dénominateur → on soustrait"
+      choices: ["3/4", "1/6", "2/6"],
+      explanation: "2/4 + 1/4 = 3/4"
     }
   ],
 
@@ -55,20 +37,8 @@ const levels = {
     {
       q: "0.5 + 0.25",
       a: "0.75",
-      choices: ["0.75", "0.70", "1"],
+      choices: ["0.75", "1", "0.70"],
       explanation: "0.5 + 0.25 = 0.75"
-    },
-    {
-      q: "1.2 + 0.8",
-      a: "2",
-      choices: ["2", "1.10", "3"],
-      explanation: "1.2 + 0.8 = 2"
-    },
-    {
-      q: "3/4 + 0.5",
-      a: "1.25",
-      choices: ["1.25", "1", "0.75"],
-      explanation: "0.75 + 0.5 = 1.25"
     }
   ]
 };
@@ -116,7 +86,7 @@ function answer(index) {
     result.style.color = "red";
   }
 
-  explanation.textContent = currentQuestion.explanation || "";
+  explanation.textContent = currentQuestion.explanation;
   document.getElementById("score").textContent = "Score : " + score;
 
   setTimeout(generateQuestion, 10000);
@@ -141,9 +111,9 @@ function toggleSlice(index) {
 function checkPie() {
   const result = document.getElementById("pieResult");
 
-  selectedSlices.sort();
+  const correct = [0, 1, 2];
 
-  const correct = [0, 1, 2]; // 3/4
+  selectedSlices.sort();
 
   if (
     selectedSlices.length === correct.length &&
@@ -158,7 +128,7 @@ function checkPie() {
 }
 
 /* -----------------------
-   INIT SAFE
+   INIT
 ------------------------ */
 
 document.addEventListener("DOMContentLoaded", () => {
