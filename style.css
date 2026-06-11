@@ -44,21 +44,34 @@ button {
 /* 🍰 CAMEMBERT */
 #pie {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
+  margin: 30px auto; /* centre le camembert */
   border-radius: 50%;
   overflow: hidden;
+  border: 3px solid #333;
+  background: #fff;
 }
 
+/* chaque part */
 .slice {
   position: absolute;
   width: 50%;
   height: 50%;
-  background: lightgray;
   transform-origin: 100% 100%;
   cursor: pointer;
+  transition: 0.2s;
+  background: #e0e0e0;
+  border: 1px solid white;
 }
 
+/* quand on clique */
 .slice.active {
-  background: orange;
+  background: #ffb347; /* couleur orange gâteau */
+  filter: brightness(1.1);
+}
+
+/* effet hover */
+.slice:hover {
+  filter: brightness(0.9);
 }

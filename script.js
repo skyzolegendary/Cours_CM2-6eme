@@ -260,7 +260,6 @@ const pieLevels = [
   { label: "3/6" },
   { label: "4/6" },
   { label: "5/6" },
-  { label: "6/6" },
 
   // huitièmes
   { label: "1/8" },
@@ -270,7 +269,6 @@ const pieLevels = [
   { label: "5/8" },
   { label: "6/8" },
   { label: "7/8" },
-  { label: "8/8" },
 
   // dixièmes (niveau +)
   { label: "1/10" },
@@ -282,13 +280,13 @@ const pieLevels = [
   { label: "7/10" },
   { label: "8/10" },
   { label: "9/10" },
-  { label: "10/10" }
 ];
 
 let currentPie = null;
 let selectedSlices = [];
 
 function createPie(total) {
+  slice.style.background = i % 2 === 0 ? "#f2f2f2" : "#d9d9d9";
   const pie = document.getElementById("pie");
   pie.innerHTML = "";
 
