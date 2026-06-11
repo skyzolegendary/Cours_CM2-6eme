@@ -95,7 +95,7 @@ function answer(index) {
   explanation.textContent = currentQuestion.explanation || "";
   document.getElementById("score").textContent = "Score : " + score;
 
-  setTimeout(generateQuestion, 1500);
+  setTimeout(generateQuestion, 10000);
 }
 
 /* -----------------------
@@ -112,18 +112,23 @@ const pieLevels = [
 let currentPie = null;
 let selectedSlices = [];
 
-/* 🎯 nouvelle cible */
+/* 🎯 nouvelle question camembert */
 function newPie() {
   currentPie = pieLevels[Math.floor(Math.random() * pieLevels.length)];
-  selectedSlices = []; // IMPORTANT reset
+  selectedSlices = [];
+
   document.getElementById("pieResult").textContent = "";
+  document.getElementById("pieLabel").textContent = "Fais : " + currentPie.label;
+
+  document.querySelectorAll(".slice").forEach(s => {
+    s.classList.remove("active");
+  });
 }
 
-/* 🍰 clic sur une part */
+/* 🍰 clic */
 function toggleSlice(index) {
-  const slices = document.querySelectorAll(".slice");
-
-  slices[index].classList.toggle("active");
+  const slice = document.querySelectorAll(".slice")[index];
+  slice.classList.toggle("active");
 
   if (selectedSlices.includes(index)) {
     selectedSlices = selectedSlices.filter(i => i !== index);
@@ -136,18 +141,17 @@ function toggleSlice(index) {
 function checkPie() {
   const result = document.getElementById("pieResult");
 
-  let correct = [...currentPie.target].sort();
-  let user = [...selectedSlices].sort();
+  const correct = new Set(currentPie.target);
+  const user = new Set(selectedSlices);
 
-  let isCorrect =
-    user.length === correct.length &&
-    user.every((v, i) => v === correct[i]);
+  const isCorrect =
+    correct.size === user.size &&
+    [...correct].every(v => user.has(v));
 
   if (isCorrect) {
     result.textContent = "✅ Bravo ! " + currentPie.label;
     result.style.color = "green";
-
-    setTimeout(newPie, 1500); // nouvelle question
+    setTimeout(newPie, 5000);
   } else {
     result.textContent = "❌ Essaie encore";
     result.style.color = "red";
